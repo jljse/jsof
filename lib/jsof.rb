@@ -3,6 +3,11 @@
 require_relative "jsof/version"
 
 module Jsof
-  class Error < StandardError; end
-  # Your code goes here...
+  class BooleanType end
 end
+
+require_relative 'jsof/wrap_array'
+require_relative 'jsof/wrap_array_type'
+require_relative 'jsof/wrap_object'
+require_relative 'jsof/wrap_helper'
+require_relative 'jsof/global'
