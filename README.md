@@ -59,7 +59,7 @@ Also, you can define nested structure with type.
 
 ```ruby
 class Y < Jsof::WrapObject
-  define_attr :xx, type: X
+  define_attr :x, type: X
 end
 
 y = Y.new
