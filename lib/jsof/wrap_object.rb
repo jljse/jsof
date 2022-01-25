@@ -89,7 +89,12 @@ class Jsof::WrapObject
     sym = key.to_sym
     return @wrapped[sym] if @wrapped.key?(sym)
 
-    elem = @internal_object[sym]
+    elem = nil
+    if @internal_object.key? sym
+      elem = @internal_object[sym]
+    elsif @internal_object.key? key.to_s
+      elem = @internal_object[key.to_s]
+    end
     boxed = Jsof::WrapHelper.boxing(elem, self.class.typeof_properties[sym])
     @wrapped[sym] = boxed if elem != boxed
     return boxed
@@ -102,8 +107,14 @@ class Jsof::WrapObject
     end
     boxed = Jsof::WrapHelper.boxing(val, self.class.typeof_properties[sym])
     @wrapped[sym] = boxed if Jsof::WrapHelper.wrapped_value?(boxed)
-    @internal_object[sym] = Jsof::WrapHelper.unboxing(val)
-    val
+
+    internal_key = sym
+    if @internal_object.key? sym
+      # use symbol (check first to avoid unnecessary to_s)
+    elsif @internal_object.key? sym.to_s
+      internal_key = sym.to_s
+    end
+    @internal_object[internal_key] = Jsof::WrapHelper.unboxing(val)
   end
 
   # Clean internal cache.

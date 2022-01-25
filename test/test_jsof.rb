@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'json'
 require_relative "./test_helper"
 
 class TestJsof < Minitest::Test
@@ -64,5 +65,19 @@ class TestJsof < Minitest::Test
     assert_raises(TypeError) { x.e = 1 }
     x.f = {}
     assert_raises(TypeError) { x.f = 1 }
+  end
+
+  def test_actual_json
+    json = JSON.parse(File.read(File.expand_path('../data/sample.json', __FILE__)))
+    jsof = Jsof(json)
+    assert_equal "XML", jsof.glossary.GlossDiv.GlossList.GlossEntry.GlossDef.GlossSeeAlso[1]
+
+    jsof = Jsof()
+    jsof.a = '1'
+    jsof.b = 2
+    jsof.c = {}
+    jsof.c.d = [0]
+    json = { "a": "1", "b": 2, "c": { "d": [0] } }
+    assert_equal JSON.generate(json), JSON.generate(jsof.to_h)
   end
 end
