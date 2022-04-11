@@ -117,6 +117,29 @@ class Jsof::WrapObject
     @internal_object[internal_key] = Jsof::WrapHelper.unboxing(val)
   end
 
+  def each_pair(&block)
+    return enum_for(:each_pair) unless block
+    internal_object.each_key do |key|
+      block.call(key, self[key])
+    end
+  end
+
+  def each_key(&block)
+    return enum_for(:each_key) unless block
+    return internal_object.each_key(&block)
+  end
+
+  def each_value(&block)
+    return enum_for(:each_value) unless block
+    internal_object.each_key do |key|
+      block.call(self[key])
+    end
+  end
+
+  def key?(key)
+    return internal_object.key?(key.to_sym) || internal_object.key?(key.to_s)
+  end
+
   # Clean internal cache.
   # Call this after you changed wrapped object directly.
   def clear_internal
